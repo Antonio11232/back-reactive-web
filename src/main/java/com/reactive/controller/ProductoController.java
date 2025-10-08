@@ -30,4 +30,9 @@ public class ProductoController {
     public Mono<Producto> buscarProductoId(@PathVariable String id){
         return productoService.findById(id);
     }
+
+    @DeleteMapping("/{id}")
+    public Mono<Void> eliminarProductoId(@PathVariable String id){
+        return productoService.deleteById(id);
+    }
 }

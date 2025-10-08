@@ -10,4 +10,5 @@ public interface IProductoService {
 
     Mono<Producto> findById(String id);
     Flux<Producto> findAll();
+    public Mono<Void> deleteById(String id);
 }

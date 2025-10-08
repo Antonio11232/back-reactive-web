@@ -35,4 +35,10 @@ public class ProductoServiceImpl implements IProductoService {
         return productoDao.findAll();
     }
 
+    @Override
+    public Mono<Void> deleteById(String id){
+        return productoDao.deleteById(id);
+    }
+
+
 }
