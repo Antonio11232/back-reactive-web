@@ -1,17 +1,23 @@
 package com.reactive.service.impl;
 
+import com.reactive.exception.NotFoundException;
 import com.reactive.model.dao.ProductoDao;
 import com.reactive.model.documents.Producto;
 import com.reactive.service.IProductoService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 
 @Service
 public class ProductoServiceImpl implements IProductoService {
+
+    public static final Logger LOGGER = LoggerFactory.getLogger(ProductoServiceImpl.class);
 
     private final ProductoDao productoDao;
 
@@ -27,7 +33,8 @@ public class ProductoServiceImpl implements IProductoService {
 
     @Override
     public Mono<Producto> findById(String id) {
-        return productoDao.findById(id);
+        return productoDao.findById(id)
+                .switchIfEmpty(Mono.error(new NotFoundException("El producto no existe.")));
     }
 
     @Override
@@ -37,7 +44,9 @@ public class ProductoServiceImpl implements IProductoService {
 
     @Override
     public Mono<Void> deleteById(String id){
-        return productoDao.deleteById(id);
+        Mono<Producto> productoDB = productoDao.findById(id)
+                .switchIfEmpty(Mono.error(new NotFoundException("El producto no existe.")));
+        return productoDB.flatMap(producto -> productoDao.deleteById(producto.getId()));
     }
 
 

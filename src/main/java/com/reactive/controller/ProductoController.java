@@ -2,6 +2,9 @@ package com.reactive.controller;
 
 import com.reactive.model.documents.Producto;
 import com.reactive.service.IProductoService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -32,7 +35,7 @@ public class ProductoController {
     }
 
     @DeleteMapping("/{id}")
-    public Mono<Void> eliminarProductoId(@PathVariable String id){
-        return productoService.deleteById(id);
+    public ResponseEntity<Mono<Void>> eliminarProductoId(@PathVariable String id){
+        return ResponseEntity.status(HttpStatusCode.valueOf(204)).body(productoService.deleteById(id));
     }
 }
