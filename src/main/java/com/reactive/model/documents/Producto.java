@@ -47,4 +47,5 @@ public class Producto {
         this.fechaCreacion = fechaCreacion;
     }
 
+
 }

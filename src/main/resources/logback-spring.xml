@@ -1,11 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <configuration>
 
-    <appender name="JSON" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
+    <!-- Escanear cambios en el archivo logback-spring.xml cada 30 segundos -->
+    <configurationScan scan="true" scanPeriod="30 seconds" />
+
+    <!-- Definir una propiedad para reutilizar el nombre del archivo -->
+    <property name="LOG_FILE" value="logs/mi-servicio.log" />
+
+    <!-- Appender para la consola -->
+    <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
     </appender>
 
+    <!-- Appender para archivo con rotación diaria -->
+    <appender name="RollingFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_FILE}</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- Rotación diaria -->
+            <fileNamePattern>logs/mi-servicio-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <!-- Conservar los últimos 30 días de logs -->
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Configuración del log raíz (aplica a toda la app) -->
     <root level="INFO">
-        <appender-ref ref="JSON"/>
+        <appender-ref ref="Console" />
+        <appender-ref ref="RollingFile" />
     </root>
 
 </configuration>
+
