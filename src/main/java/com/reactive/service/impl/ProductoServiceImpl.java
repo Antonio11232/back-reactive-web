@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.reactive.exception.NotFoundException;
 import com.reactive.model.dao.ProductoDao;
 import com.reactive.model.documents.Producto;
+import com.reactive.model.documents.ProductoDto;
 import com.reactive.service.IProductoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +30,10 @@ public class ProductoServiceImpl implements IProductoService {
     }
 
     @Override
-    public Mono<Producto> save(Producto producto) {
+    public Mono<Producto> save(ProductoDto productoDto) {
+        Producto producto = new Producto();
+        producto.setNombre(productoDto.getNombre());
+        producto.setPrecio(productoDto.getPrecio());
         producto.setFechaCreacion(LocalDateTime.now());
         return productoDao.save(producto)
                 .doOnNext(producto1 -> buildLog("Producto guardado exitosamente.", producto1));
