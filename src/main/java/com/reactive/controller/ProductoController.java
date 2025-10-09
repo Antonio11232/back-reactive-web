@@ -3,6 +3,7 @@ package com.reactive.controller;
 import com.reactive.model.documents.Producto;
 import com.reactive.model.documents.ProductoDto;
 import com.reactive.service.IProductoService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,18 +21,18 @@ public class ProductoController {
     }
 
     @PostMapping
-    public Mono<Producto> guardarProducto(@RequestBody ProductoDto productoDto) {
-        return productoService.save(productoDto);
+    public ResponseEntity<Mono<Producto>> guardarProducto(@Valid @RequestBody ProductoDto productoDto) {
+        return ResponseEntity.status(HttpStatusCode.valueOf(201)).body(productoService.save(productoDto));
     }
 
     @GetMapping()
-    public Flux<Producto> listarProductos() {
-        return productoService.findAll();
+    public ResponseEntity<Flux<Producto>> listarProductos() {
+        return ResponseEntity.status(HttpStatusCode.valueOf(200)).body(productoService.findAll());
     }
 
     @GetMapping("/{id}")
-    public Mono<Producto> buscarProductoId(@PathVariable String id) {
-        return productoService.findById(id);
+    public ResponseEntity<Mono<Producto>> buscarProductoId(@PathVariable String id) {
+        return ResponseEntity.status(HttpStatusCode.valueOf(200)).body(productoService.findById(id));
     }
 
     @DeleteMapping("/{id}")
